@@ -18,7 +18,7 @@
                ///////////////// 
 
 # Usage
-In this repository, We will publish detection logic, including Sigma and YARA rules, related to the threats introduced in the blog.
+In this repository, We publish detection logic, including Sigma and YARA rules, related to the threats introduced in the blog.
 When applying these rules, it is recommended that they be adjusted to align with your specific environment.
 
 # About Talos
