@@ -17,5 +17,5 @@
              ////////////////////////
                ///////////////// 
 
-#Usage
+# Usage
 In this repository, We will publish detection logic, including Sigma and YARA rules, related to the threats introduced in the blog.
