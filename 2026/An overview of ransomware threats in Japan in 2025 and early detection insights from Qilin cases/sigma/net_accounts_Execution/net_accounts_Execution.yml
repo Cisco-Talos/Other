@@ -1,0 +1,22 @@
+title: net accounts Execution
+status: experimental
+description: Detects execution of net.exe/net1.exe with the "accounts" subcommand.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_image:
+    Image|endswith:
+      - '\net.exe'
+      - '\net1.exe'
+
+  selection_args:
+    CommandLine|contains:
+      - ' accounts'
+
+  condition: selection_image and selection_args
+
+level: low

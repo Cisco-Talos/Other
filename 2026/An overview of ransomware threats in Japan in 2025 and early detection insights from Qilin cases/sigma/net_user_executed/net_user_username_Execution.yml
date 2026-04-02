@@ -1,0 +1,23 @@
+title: net user <username> Execution
+status: experimental
+description: Detects execution of net.exe/net1.exe with "net user <username>" command.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_image:
+    Image|endswith:
+      - '\net.exe'
+      - '\net1.exe'
+
+  selection_args:
+    CommandLine|contains:
+      - ' user '
+
+  condition: selection_image and selection_args
+
+
+level: low

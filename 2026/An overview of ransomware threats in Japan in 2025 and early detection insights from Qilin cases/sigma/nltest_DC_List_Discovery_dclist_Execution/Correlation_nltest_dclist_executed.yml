@@ -1,0 +1,15 @@
+title: Correlation - nltest /dclist executed >=2 times in 1 minute (exclude allowed accounts)
+status: experimental
+description: Alerts when nltest /dclist is executed 2+ times within 1 minute on the same host, excluding allowlisted accounts.
+author: Cisco Talos
+
+correlation:
+  type: event_count
+group-by:
+    - Computer
+    - User
+  timespan: 1m
+  condition:
+    gte: 2
+
+level: medium

@@ -1,0 +1,16 @@
+title: Correlation - net user executed 3+ times in 15 minutes (any username)
+status: experimental
+description: Detects repeated execution of net user commands (any username) 3 or more times within 15 minutes on the same host.
+author: Cisco Talos
+
+correlation:
+  type: event_count
+  rule: net user <username> Execution ID
+  group-by:
+    - Computer
+
+  timespan: 15m
+  condition:
+    gte: 3
+
+level: medium

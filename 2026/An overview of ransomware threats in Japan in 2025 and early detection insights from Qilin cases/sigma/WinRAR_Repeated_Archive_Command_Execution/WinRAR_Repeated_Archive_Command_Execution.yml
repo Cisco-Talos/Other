@@ -1,0 +1,31 @@
+title: WinRAR Repeated Archive Command Execution (Specific Args) - Base
+status: experimental
+description: Detects execution of WinRAR with specific archiving arguments, excluding allowlisted users.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_image:
+    Image|endswith: '\WinRAR.exe'
+
+  selection_args:
+    CommandLine|contains|all:
+      - ' a '
+      - ' -ep1'
+      - ' -scul'
+      - ' -r0'
+      - ' -iext'
+      - ' -imon1'
+
+filter_allowlisted_users:
+    User:
+      - 'CORP\backupsvc'
+      - 'CORP\itadmin01'
+      - 'CORP\itadmin02'
+
+  condition: selection_image and selection_args and not filter_allowlisted_users
+
+level: low

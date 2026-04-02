@@ -1,0 +1,33 @@
+title: !light.bat File Creation
+status: experimental
+description:
+  Detects creation of specific output files and directories associated with
+  credential dumping and decryption toolkits writing results to !logs\Result*.txt,
+  !logs\Linux\*.txt, and !logs\Hashes\.
+author: Cisco Talos
+logsource:
+  product: windows
+  category: file_event
+detection:
+  selection_event:
+    EventID: 11
+
+  selection_result_files:
+    TargetFilename|endswith:
+      - '\!logs\Result.txt'
+      - '\!logs\Result32.txt'
+
+  selection_linux_outputs:
+    TargetFilename|contains|all:
+      - '\!logs\Linux\'
+      - '.txt'
+
+  selection_hashes_dir:
+    TargetFilename|contains: '\!logs\Hashes\'
+
+  condition: selection_event and (
+      selection_result_files
+      or selection_linux_outputs
+      or selection_hashes_dir
+    )
+level: high

@@ -1,0 +1,52 @@
+title: Qilin ransomware Execution via PsExec
+status: experimental
+description: Detects PsExec-style remote execution and execution of Qilin ransomware 
+arguments such as --password with spread or no-admin flags.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_cmd_psexec:
+    Image|endswith: '\cmd.exe'
+    CommandLine|contains|all:
+      - ' /C'
+      - ' -accepteula'
+      - '\\\\'
+      - ' -c'
+      - ' -f'
+      - ' -h'
+      - ' -d'
+      - ' -i'
+
+  selection_psexec_direct:
+    Image|endswith:
+      - '\psexec.exe’
+
+CommandLine|contains|all:
+      - ' -accepteula'
+      - '\\\\'
+      - ' -c'
+
+selection_password:
+    CommandLine|contains:
+      - '--password'
+
+selection_spread_flags:
+    CommandLine|contains|all:
+      - '--spread'
+      - '--spread-process'
+
+selection_no_admin:
+    CommandLine|contains:
+      - '--no-admin'
+
+selection_has_exe:
+    CommandLine|contains:
+      - '.exe'
+
+  condition:  (selection_cmd_psexec or selection_psexec_direct) and((selection_password and (selection_spread_flags or selection_no_admin)) and selection_has_exe)
+
+  level: high

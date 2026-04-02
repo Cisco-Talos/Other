@@ -1,0 +1,26 @@
+title: nltest DC List Discovery (/dclist) Execution
+status: experimental
+description: Detects execution of nltest.exe with /dclist:<domain> used for DC discovery.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection:
+    Image|endswith: '\nltest.exe'
+    CommandLine|contains:
+      - ' /dclist:'
+      - ' /dclist ‘
+
+# Exclude allowed accounts (adjust according to the field names used in your environment)
+filter_allowed_accounts:
+    User|contains:
+      - 'CORP\AdminUser1'
+      - 'CORP\AdminUser2'
+      - 'CORP\HelpdeskSvc'
+
+  condition: selection and not filter_allowed_accounts
+
+level: low

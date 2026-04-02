@@ -1,0 +1,24 @@
+title: RDP Enabled via Registry Modification (fDenyTSConnections)
+status: experimental
+description: Detects registry modification that enables Remote Desktop by setting
+  fDenyTSConnections to 0 via reg.exe.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_image:
+    Image|endswith: '\reg.exe'
+
+  selection_args:
+    CommandLine|contains|all:
+      - 'add'
+      - 'HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server'
+      - 'fDenyTSConnections'
+      - '/d 0'
+
+  condition: selection_image and selection_args
+
+level: high

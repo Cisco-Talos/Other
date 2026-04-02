@@ -1,0 +1,18 @@
+title: Correlation - net accounts executed >=10 times in 1 day across multiple hosts
+status: experimental
+description: Alerts when net accounts is executed 10+ times within 1 day across 2+ hosts.
+author: Cisco Talos
+
+correlation:
+- type: event_count
+timespan: 24h
+    condition:
+      gte: 10
+
+- type: value_count
+timespan: 24h
+    field: Computer
+    condition:
+      gte: 2
+
+level: medium

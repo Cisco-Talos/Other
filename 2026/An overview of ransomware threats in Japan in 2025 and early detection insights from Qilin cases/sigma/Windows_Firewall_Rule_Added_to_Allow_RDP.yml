@@ -1,0 +1,27 @@
+title: Windows Firewall Rule Added to Allow RDP (netsh advfirewall)
+status: experimental
+description: Detects adding a Windows Firewall rule that allows inbound RDP (TCP/3389) using netsh advfirewall.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_image:
+    Image|endswith: '\netsh.exe'
+
+  selection_args:
+    CommandLine|contains|all:
+      - 'advfirewall'
+      - 'firewall'
+      - 'add'
+      - 'rule'
+      - 'dir=in'
+      - 'protocol=TCP'
+      - 'localport=3389'
+      - 'action=allow'
+
+  condition: selection_image and selection_args
+
+level: high

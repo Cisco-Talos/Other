@@ -1,0 +1,15 @@
+title: Correlation - Suspicious User Runs WinRAR Command >=5 times in 20 minutes
+status: experimental
+description: Alerts when a non-allowlisted user runs the specific WinRAR archiving command 5+ times within 20 minutes on the same host.
+author: Cisco Talos
+
+correlation:
+  type: event_count
+group-by:
+    - Computer
+    - User
+  timespan: 20m
+  condition:
+    gte: 5
+
+level: medium

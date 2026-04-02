@@ -1,0 +1,68 @@
+title: Suspicious PowerShell Execution Flags (Encoded, Bypass, Hidden Window)
+status: experimental
+description: Detects suspicious PowerShell executions using encoded commands,
+  execution policy bypass, non-interactive/no profile flags,
+  hidden window styles, or combinations commonly used in malicious activity.
+author: Cisco Talos
+
+logsource:
+  product: windows
+  category: process_creation
+
+detection:
+  selection_image:
+    Image|endswith:
+      - '\powershell.exe'
+
+  selection_encoded:
+    CommandLine|contains:
+      - ' -enc'
+      - ' -encodedcommand'
+      - ' /enc'
+      - ' /encodedcommand'
+      - ' -e '
+      - ' /e '
+
+  selection_bypass_hidden:
+    CommandLine|contains|all:
+      - 'executionpolicy'
+      - 'bypass'
+      - 'hidden'
+
+  selection_exec_combo_exec:
+    CommandLine|contains|all:
+      - ' -exec'
+      - 'bypass'
+      - ' -noni'
+      - ' -nop'
+      - ' -w'
+      - ' -c'
+
+  selection_exec_combo_e:
+    CommandLine|contains|all:
+      - ' -e '
+      - 'bypass'
+      - ' -noni'
+      - ' -nop'
+      - ' -w'
+      - ' -c'
+
+  selection_noexit_hidden:
+    CommandLine|contains|all:
+      - ' -noexit'
+      - 'executionpolicy'
+      - 'bypass'
+      - 'windowstyle'
+      - 'hidden'
+
+  parent_cmd_qc:
+    ParentImage|endswith:
+      - '\cmd.exe'
+    ParentCommandLine|contains|all:
+      - ' /q'
+      - ' /c'
+
+  condition: selection_image and parent_cmd_qc and (selection_encoded or selection_bypass_hidden
+      or selection_noexit_hidden or selection_exec_combo_exec or selection_exec_combo_e )
+
+level: high

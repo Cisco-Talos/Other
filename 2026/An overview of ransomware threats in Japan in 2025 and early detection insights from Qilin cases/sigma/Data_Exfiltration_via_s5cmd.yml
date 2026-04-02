@@ -1,0 +1,29 @@
+title: Data Exfiltration via s5cmd
+status: experimental
+description: Detects potential data exfiltration using s5cmd to upload selected document author: Cisco Talos
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_image:
+    Image|endswith:
+      - '\s5cmd.exe'
+  selection_args:
+    CommandLine|contains:
+      - '--credentials-file'
+      - ' cp '
+      - 's3://'
+  selection_ext:
+    CommandLine|contains:
+      - '.pdf'
+      - '.doc'
+      - '.docx'
+      - '.xls'
+      - '.xlsx'
+      - '.png'
+      - '.jpg'
+      - '.jpeg'
+      - '.tif'
+      - '.zip'
+  condition: selection_image and selection_args and selection_ext
+level: high
